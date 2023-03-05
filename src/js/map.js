@@ -1,4 +1,5 @@
 import {calculateCalories} from "./calories.js";
+import mcDoIcon from "../img/mcdo.png";
 
 export function getUserLocation() {
     return new Promise(function (resolve, reject) {
@@ -85,7 +86,7 @@ export async function getDirections(userLocation, map) {
     map?.setCenter(userLocation);
 
     const icon = {
-        url: "../src/img/mcdo.png", // url
+        url: mcDoIcon, // url
         scaledSize: new google.maps.Size(35, 35), // scaled size
         origin: new google.maps.Point(0, 0), // origin
         anchor: new google.maps.Point(35 / 2, 35 / 2), // anchor

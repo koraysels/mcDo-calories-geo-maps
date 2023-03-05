@@ -2,13 +2,14 @@ import './src/css/style.css'
 import {getDirections, setupMap} from './src/js/map.js'
 import {calculateAmountOfBurgers} from "./src/js/calories.js";
 
-let cardElement = document.querySelector(".card");
+const cardElement = document.querySelector(".card");
+const button = document.getElementById("getDirections");
 
 try {
     const {userLocation, map} = await setupMap(document.querySelector('#map'))
-    const button = document.getElementById("getDirections");
-
+    cardElement.innerHTML = "";
     button.classList.remove("hidden")
+
     button.addEventListener('click', async () => {
 
         cardElement.innerHTML = "Loading...";
