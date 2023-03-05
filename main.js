@@ -1,13 +1,34 @@
 import './src/css/style.css'
-import {setupMap} from './src/js/map.js'
+import {getDirections, setupMap} from './src/js/map.js'
+import {calculateAmountOfBurgers} from "./src/js/calories.js";
+
+let cardElement = document.querySelector(".card");
+
+try {
+    const {userLocation, map} = await setupMap(document.querySelector('#map'))
 
 
-const result = await setupMap(document.querySelector('#map'))
-console.log('Walking distance: ', result.distance.text);
-console.log('Calories 200kCal/km: ', result.kCal + 'kCal');
+    document.getElementById("getDirections").addEventListener('click', async () => {
 
-document.querySelector(".card").innerHTML =
+        cardElement.innerHTML = "Loading...";
+
+        const {distance, kCal} = await getDirections(userLocation, map)
+
+        console.log('Walking distance: ', distance?.text);
+        console.log('Calories 200kCal/km: ', kCal + 'kCal');
+
+        cardElement.innerHTML =
+            `
+    <p>
+       <span>Distance:</span> ${distance?.text} <br>
+        <span>Calories to regain:</span> ${kCal}kCal <br>
+    </p>
+    <h3>That's ${calculateAmountOfBurgers(kCal)} BigMac's 🍔</h3> 
     `
-    Afstand: ${result.distance.text} <br>
-    Calorieen te voet: ${result.kCal}kCal 
+    });
+} catch (e) {
+    cardElement.innerHTML = `
+        Ooops somehting went wrong! 
+        <pre>${e}</pre>
     `
+}

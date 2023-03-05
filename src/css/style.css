@@ -72,6 +72,7 @@ button {
     font-family: inherit;
     background-color: #1a1a1a;
     cursor: pointer;
+    color: white;
     transition: border-color 0.25s;
 }
 
@@ -94,9 +95,6 @@ button:focus-visible {
         color: #747bff;
     }
 
-    button {
-        background-color: #f9f9f9;
-    }
 }
 
 

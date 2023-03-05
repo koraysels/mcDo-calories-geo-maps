@@ -1,3 +1,5 @@
+import {calculateCalories} from "./calories.js";
+
 export function getUserLocation() {
     return new Promise(function (resolve, reject) {
         if (navigator.geolocation) {
@@ -15,7 +17,7 @@ export function getUserLocation() {
     });
 }
 
-export function getPlace(name = "McDonalds", userLocation, radius = 500) {
+export function getPlace(name = "McDonalds", userLocation, radius = 500, map) {
     return new Promise(function (resolve, reject) {
         let placesService = new google.maps.places.PlacesService(map);
 
@@ -36,27 +38,32 @@ export function getPlace(name = "McDonalds", userLocation, radius = 500) {
 }
 
 export async function setupMap(element) {
+    const map = new google.maps.Map(element, {
+        center: {lat: 51.2206152, lng: 4.4371254},
+        zoom: 14
+    });
+    const userLocation = await getUserLocation();
+    //Reposition The map to the user Center
+    map.setCenter(userLocation);
+    return {userLocation, map}
+}
+
+export async function getDirections(userLocation, map) {
 
     const distanceAndCalories = {
         distance: null,
         kCal: null
     };
-    const userLocation = await getUserLocation();
-
-    const results = await getPlace("McDonalds", userLocation)
+    const results = await getPlace("McDonalds", userLocation, 500, map)
 
     // Get the first McDonald's location and display it on the map
     const nearestMcDonalds = results[0];
 
-    const map = new google.maps.Map(element, {
-        zoom: 14
-    });
     let marker = new google.maps.Marker({
         position: nearestMcDonalds.geometry.location,
         map: map,
         label: 'McDo' // Set the label to 'McDo'
     });
-
     // Use the Google Maps Directions API to show the route to the nearest McDonald's location
     let directionsService = new google.maps.DirectionsService();
     let directionsRenderer = new google.maps.DirectionsRenderer();
@@ -70,12 +77,11 @@ export async function setupMap(element) {
     const result = await directionsService.route(request)
     if (result.status == google.maps.DirectionsStatus.OK) {
         directionsRenderer.setDirections(result);
-        let kCal = (result.routes[0].legs[0].distance.value / 1000) * 200;
         distanceAndCalories.distance = result.routes[0].legs[0].distance;
-        distanceAndCalories.kCal = kCal.toFixed(2);
+        distanceAndCalories.kCal = calculateCalories(result.routes[0].legs[0].distance.value)
     }
 
-    map.setCenter(userLocation);
+    map?.setCenter(userLocation);
+
     return distanceAndCalories
 }
-
