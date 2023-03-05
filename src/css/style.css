@@ -73,7 +73,7 @@ button {
     background-color: #1a1a1a;
     cursor: pointer;
     color: white;
-    transition: border-color 0.25s;
+    transition: border-color 0.25s, opacity .3s ease;
 }
 
 button:hover {
@@ -103,4 +103,9 @@ button:focus-visible {
     width: 400px;
     margin: auto;
     background-color: gray;
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden;
 }

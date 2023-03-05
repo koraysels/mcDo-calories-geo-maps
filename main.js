@@ -6,9 +6,10 @@ let cardElement = document.querySelector(".card");
 
 try {
     const {userLocation, map} = await setupMap(document.querySelector('#map'))
+    const button = document.getElementById("getDirections");
 
-
-    document.getElementById("getDirections").addEventListener('click', async () => {
+    button.classList.remove("hidden")
+    button.addEventListener('click', async () => {
 
         cardElement.innerHTML = "Loading...";
 

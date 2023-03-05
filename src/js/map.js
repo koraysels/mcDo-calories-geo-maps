@@ -59,11 +59,6 @@ export async function getDirections(userLocation, map) {
     // Get the first McDonald's location and display it on the map
     const nearestMcDonalds = results[0];
 
-    let marker = new google.maps.Marker({
-        position: nearestMcDonalds.geometry.location,
-        map: map,
-        label: 'McDo' // Set the label to 'McDo'
-    });
     // Use the Google Maps Directions API to show the route to the nearest McDonald's location
     let directionsService = new google.maps.DirectionsService();
     let directionsRenderer = new google.maps.DirectionsRenderer();
@@ -83,5 +78,18 @@ export async function getDirections(userLocation, map) {
 
     map?.setCenter(userLocation);
 
+    const icon = {
+        url: "../src/img/mcdo.png", // url
+        scaledSize: new google.maps.Size(35, 35), // scaled size
+        origin: new google.maps.Point(0, 0), // origin
+        anchor: new google.maps.Point(35/2, 35/2), // anchor
+        zIndex: 99999
+    };
+
+    let marker = new google.maps.Marker({
+        position: nearestMcDonalds.geometry.location,
+        map: map,
+        icon: icon // Set the label to 'McDo'
+    });
     return distanceAndCalories
 }
