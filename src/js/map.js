@@ -43,6 +43,12 @@ export async function setupMap(element) {
         zoom: 14
     });
     const userLocation = await getUserLocation();
+    new google.maps.Marker({
+        position: userLocation,
+        map: map,
+        optimized: false,
+        zIndex: 99999999
+    });
     //Reposition The map to the user Center
     map.setCenter(userLocation);
     return {userLocation, map}
@@ -61,7 +67,7 @@ export async function getDirections(userLocation, map) {
 
     // Use the Google Maps Directions API to show the route to the nearest McDonald's location
     let directionsService = new google.maps.DirectionsService();
-    let directionsRenderer = new google.maps.DirectionsRenderer();
+    let directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true}); // SupressMarkers so we can use our own markers
     directionsRenderer.setMap(map);
     let request = {
         origin: userLocation,
@@ -82,14 +88,17 @@ export async function getDirections(userLocation, map) {
         url: "../src/img/mcdo.png", // url
         scaledSize: new google.maps.Size(35, 35), // scaled size
         origin: new google.maps.Point(0, 0), // origin
-        anchor: new google.maps.Point(35/2, 35/2), // anchor
-        zIndex: 99999
+        anchor: new google.maps.Point(35 / 2, 35 / 2), // anchor
     };
 
-    let marker = new google.maps.Marker({
+    new google.maps.Marker({
         position: nearestMcDonalds.geometry.location,
         map: map,
-        icon: icon // Set the label to 'McDo'
+        icon: icon, // Set the label to 'McDo'
+        optimized: false,
+        zIndex: 99999999
     });
+
+
     return distanceAndCalories
 }
